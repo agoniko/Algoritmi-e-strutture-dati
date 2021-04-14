@@ -138,6 +138,5 @@ int main()
         head = bistInsert(head, buff);
         p = strtok(NULL, " ");
     }
-
     bist_orderprint(head);
 }
