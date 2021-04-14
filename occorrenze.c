@@ -89,11 +89,11 @@ BistNode search(BistNode n, char word[length])
     }
     else if (strcmp(n->occ->word, word) < 0)
     {
-        search(n->r, word);
+        return search(n->r, word);
     }
     else
     {
-        search(n->l, word);
+       return  search(n->l, word);
     }
 }
 void toLower(char *s)
