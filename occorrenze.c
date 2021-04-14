@@ -116,13 +116,6 @@ int main()
     char buff[length];
     BistNode head = NULL;
 
-    while(scanf("%s",testo) == 1){
-        printf("%s",testo);
-    }
-
-
-
-    /*
     while (p != NULL)
     {
         char *capo = strchr(p, '\n');
@@ -146,5 +139,5 @@ int main()
         p = strtok(NULL, " ");
     }
 
-    bist_orderprint(head);*/
+    bist_orderprint(head);
 }
