@@ -124,6 +124,37 @@ void heapify_up(Heap h, int i)
     }
 }
 
+void heapify_down(Heap h, int i, int n)
+{
+    //i ha almeno un figlio
+    if (i * 2 <= n)
+    {
+        int j;
+        if (i * 2 == n)
+        {
+            //i ha solo il figlio sinistro
+            j = 2 * i;
+        }
+        else
+        {
+            j = cmp(h[2 * i], h[2 * i + 1]) < 0 ? 2 * i : 2 * i + 1;
+        }
+
+        if (cmp(h[j], h[i]) < 0)
+        {
+            swap(h, i, j);
+            heapify_down(h, j, n);
+        }
+    }
+}
+
+void swap(Heap h, int i, int j)
+{
+    Item ap = h[i];
+    h[i] = h[j];
+    h[j] = ap;
+}
+
 int main()
 {
     Heap h = malloc(100 * sizeof(Item));
@@ -142,20 +173,25 @@ int main()
     h[13] = 8;
     h[14] = 16;
     h[15] = 4;
-    //stampa(h, 15);
+
     Bitnode b = bit_arr2tree(h, 16, 0);
-
     print2DUtil(b, 0);
-
-    heapify_up(h, 15);
-    b = bit_arr2tree(h, 16, 0);
+    printf("-------------------------------------------------------\n");
+    int i = 2;
+    int n = 16;
+    swap(h, n-1, i);
+    n--;
+    int j = father(i);
+    if (cmp(h[i], h[j]) < 0)
+    {
+        printf("up\n");
+        heapify_up(h, i);
+    }
+    else if (cmp(h[i], h[i * 2]) > 0 || cmp(h[i], h[i * 2 + 1]) > 0)
+    {
+        printf("down\n");
+        heapify_down(h, i, n);
+    }
+    b = bit_arr2tree(h, n, 0);
     print2DUtil(b, 0);
-    // stampa(h, 15);
-}
-
-void swap(Heap h, int i, int j)
-{
-    Item ap = h[i];
-    h[i] = h[j];
-    h[j] = ap;
 }
