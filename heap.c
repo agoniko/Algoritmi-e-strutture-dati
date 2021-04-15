@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#define COUNT 10
 
 typedef int Item;
 typedef Item *Heap;
@@ -17,11 +18,77 @@ struct pqueue
 
 typedef struct pqueue *Pqueue;
 
+typedef struct bit_node
+{
+    Item item;
+    struct bit_node *l, *r;
+} bit_node;
+
+typedef struct bit_node *Bitnode;
+
+Bitnode bit_new(Item);
+void bit_printAsSummary(Bitnode p, int spaces);
+void bit_preorder(Bitnode);
+void bit_inorder(Bitnode);
+void bit_postorder(Bitnode);
+
+void print2DUtil(Bitnode root, int space)
+{
+    // Base case
+    if (root == NULL)
+        return;
+
+    // Increase distance between levels
+    space += COUNT;
+
+    // Process right child first
+    print2DUtil(root->r, space);
+
+    // Print current node after space
+    // count
+    printf("\n");
+    for (int i = COUNT; i < space; i++)
+        printf(" ");
+    printf("%d\n", root->item);
+
+    // Process left child
+    print2DUtil(root->l, space);
+}
+
+Bitnode bit_new(Item item)
+{
+    Bitnode new = malloc(sizeof(Bitnode));
+    new->item = item;
+    new->l = new->r = NULL;
+    return new;
+}
+
 void stampa(Heap h, int size)
 {
     for (int i = 0; i < size; i++)
     {
-        printf("%d: %d\n", i, h[i]);
+        printf("%d-> %d ", i, h[i]);
+    }
+    printf("\n");
+}
+
+Bitnode bit_arr2tree(Item a[], int n, int i)
+{
+    if (i == 0)
+    {
+        Bitnode head = bit_new(a[0]);
+        head->l = bit_arr2tree(a, n, 1);
+        head->r = bit_arr2tree(a, n, 2);
+        return head;
+    }
+    else
+    {
+        Bitnode temp = bit_new(a[i]);
+        if (i < n / 2)
+            temp->l = bit_arr2tree(a, n, i * 2 + 1);
+        if (i < n / 2 - 1)
+            temp->r = bit_arr2tree(a, n, i * 2 + 2);
+        return temp;
     }
 }
 
@@ -59,14 +126,31 @@ void heapify_up(Heap h, int i)
 
 int main()
 {
-    Heap h = malloc(sizeof(Item));
-    for (int i = 1; i < 7; i++)
-    {
-        h[i] = 5-i;
-    }
-    stampa(h, 6);
-    heapify_up(h,5);
-    stampa(h, 6);
+    Heap h = malloc(100 * sizeof(Item));
+    h[1] = 1;
+    h[2] = 2;
+    h[3] = 5;
+    h[4] = 10;
+    h[5] = 3;
+    h[6] = 7;
+    h[7] = 11;
+    h[8] = 15;
+    h[9] = 17;
+    h[10] = 20;
+    h[11] = 9;
+    h[12] = 15;
+    h[13] = 8;
+    h[14] = 16;
+    h[15] = 4;
+    //stampa(h, 15);
+    Bitnode b = bit_arr2tree(h, 16, 0);
+
+    print2DUtil(b, 0);
+
+    heapify_up(h, 15);
+    b = bit_arr2tree(h, 16, 0);
+    print2DUtil(b, 0);
+    // stampa(h, 15);
 }
 
 void swap(Heap h, int i, int j)
