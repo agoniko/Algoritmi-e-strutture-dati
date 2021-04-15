@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #define COUNT 10
 
+int conf = 0;
+
 typedef int Item;
 typedef Item *Heap;
 
@@ -9,6 +11,8 @@ void swap(Heap h, int i, int j);
 int father(int i);
 int cmp(Item a, Item b);
 void heapify_up(Heap h, int i);
+void pqueue_sort(Item a[], int l, int r);
+void delete (Heap h, int i, int *n);
 
 struct pqueue
 {
@@ -31,6 +35,15 @@ void bit_printAsSummary(Bitnode p, int spaces);
 void bit_preorder(Bitnode);
 void bit_inorder(Bitnode);
 void bit_postorder(Bitnode);
+
+void bit_inorder(Bitnode p)
+{
+    if (p == NULL)
+        return;
+    bit_inorder(p->l);
+    printf("%d ", p->item);
+    bit_inorder(p->r);
+}
 
 void print2DUtil(Bitnode root, int space)
 {
@@ -65,9 +78,9 @@ Bitnode bit_new(Item item)
 
 void stampa(Heap h, int size)
 {
-    for (int i = 0; i < size; i++)
+    for (int i = 1; i <= size; i++)
     {
-        printf("%d-> %d ", i, h[i]);
+        printf("%d ", h[i]);
     }
     printf("\n");
 }
@@ -113,9 +126,11 @@ int cmp(Item a, Item b)
 
 void heapify_up(Heap h, int i)
 {
+    
     if (i > 1)
     {
         int j = father(i);
+        
         if (cmp(h[i], h[j]) < 0)
         {
             swap(h, i, j);
@@ -126,10 +141,12 @@ void heapify_up(Heap h, int i)
 
 void heapify_down(Heap h, int i, int n)
 {
+    
     //i ha almeno un figlio
     if (i * 2 <= n)
     {
         int j;
+        
         if (i * 2 == n)
         {
             //i ha solo il figlio sinistro
@@ -139,13 +156,49 @@ void heapify_down(Heap h, int i, int n)
         {
             j = cmp(h[2 * i], h[2 * i + 1]) < 0 ? 2 * i : 2 * i + 1;
         }
-
+        
         if (cmp(h[j], h[i]) < 0)
         {
             swap(h, i, j);
             heapify_down(h, j, n);
         }
     }
+}
+
+void pqueue_sort(Item a[], int l, int r)
+{
+    Pqueue p = malloc(sizeof(Pqueue));
+    p->heap = malloc(20 * sizeof(Heap));
+    p->size = r - l + 1;
+    p->count = 0;
+    for (int i = 0; i < p->size; i++)
+    {
+        p->heap[i + 1] = a[l + i];
+        heapify_up(p->heap, i);
+    }
+    while (p->size > 0)
+    {
+        printf("%d\n", *p->heap);
+        delete (p->heap, 0, &p->size);
+    }
+    printf("%d\n", *p->heap);
+}
+
+void delete (Heap h, int i, int *n)
+{
+    swap(h, *n, i);
+    *n = *n - 1;
+    int j = father(i);
+    
+    if (cmp(h[i], h[j]) < 0)
+    {
+        heapify_up(h, i);
+    }
+    else if (cmp(h[i], h[i * 2]) > 0 || cmp(h[i], h[i * 2 + 1]) > 0)
+    {
+        heapify_down(h, i, *n);
+    }
+    
 }
 
 void swap(Heap h, int i, int j)
@@ -157,41 +210,11 @@ void swap(Heap h, int i, int j)
 
 int main()
 {
-    Heap h = malloc(100 * sizeof(Item));
-    h[1] = 1;
-    h[2] = 2;
-    h[3] = 5;
-    h[4] = 10;
-    h[5] = 3;
-    h[6] = 7;
-    h[7] = 11;
-    h[8] = 15;
-    h[9] = 17;
-    h[10] = 20;
-    h[11] = 9;
-    h[12] = 15;
-    h[13] = 8;
-    h[14] = 16;
-    h[15] = 4;
-
-    Bitnode b = bit_arr2tree(h, 16, 0);
-    print2DUtil(b, 0);
-    printf("-------------------------------------------------------\n");
-    int i = 2;
-    int n = 16;
-    swap(h, n-1, i);
-    n--;
-    int j = father(i);
-    if (cmp(h[i], h[j]) < 0)
+    int n = 15;
+    int h[n];
+    for (int i = 0; i < n; i++)
     {
-        printf("up\n");
-        heapify_up(h, i);
+        h[i] = n - i;
     }
-    else if (cmp(h[i], h[i * 2]) > 0 || cmp(h[i], h[i * 2 + 1]) > 0)
-    {
-        printf("down\n");
-        heapify_down(h, i, n);
-    }
-    b = bit_arr2tree(h, n, 0);
-    print2DUtil(b, 0);
+    pqueue_sort(h, 0, n - 1);
 }
