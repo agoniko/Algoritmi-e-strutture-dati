@@ -9,7 +9,7 @@ void swap(Heap h, int i, int j);
 int father(int i);
 int cmp(Item a, Item b);
 void heapify_up(Heap h, int i);
-void pqueue_sort(Item a[], int l, int r);
+Pqueue pqueue_sort(Item a[], int l, int r);
 void deleteNode (Heap h, int i, int *n);
 
 struct pqueue
@@ -103,7 +103,7 @@ void heapify_down(Heap h, int i, int n)
     }
 }
 
-void pqueue_sort(Item a[], int l, int r)
+Pqueue pqueue_sort(Item a[], int l, int r)
 {
     Pqueue p = malloc(sizeof(Pqueue));
     p->heap = malloc(20 * sizeof(Heap));
@@ -114,12 +114,7 @@ void pqueue_sort(Item a[], int l, int r)
         p->heap[i + 1] = a[l + i];
         heapify_up(p->heap, i);
     }
-    while (p->size > 0)
-    {
-        printf("%d\n", *p->heap);
-        deleteNode (p->heap, 0, &p->size);
-    }
-    printf("%d\n", *p->heap);
+    return p;
 }
 
 void deleteNode (Heap h, int i, int *n)
