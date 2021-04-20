@@ -20,7 +20,6 @@ void print(int a[], int size)
     }
     printf("\n");
 }
-
 void scambia(int a[], int i, int j)
 {
     int ap = a[i];
@@ -29,31 +28,28 @@ void scambia(int a[], int i, int j)
 }
 
 /*
-Risulta il miglior algoritmo tra i 3 elementari nonostante a caso peggiore e
-migliore sia uguale all'InsertionSort, però in molti casi generici si comporta
-meglio ed è stato anche impostato/studiato meglio.
-Complessità O(n*n)
+Si chiama così
+perchè ad ogni iterazione inserisce il valore nella prima parte che non esamina più,
+ovvero nella parte già ordinata. Questo comporta che al passo k i valori da V[0] a
+V[k] siano ordinati tra loro.
+Ottimo con i vettori già ordinati O(n-1), pessimo con i vettori al contrario.
+Complessita O(n*n)
 Caso migliore: n-1 confronti
 */
 
-void bubbleSort(int a[], int size)
+void inserionSort(int a[], int size)
 {
-    int scambiato = 1;
-    while (scambiato == 1)
+    for (int i = 1; i < size; i++)
     {
-        scambiato = 0;
-        for (int i = 0; i < size - 1; i++)
+        for (int j = 0; j < i; j++)
         {
-            if (a[i] > a[i + 1])
+            if (a[i] < a[j])
             {
-                scambia(a, i, i + 1);
-                scambiato = 1;
+                scambia(a, i, j);
             }
         }
     }
 }
-
-
 
 int main()
 {
@@ -61,6 +57,6 @@ int main()
     int a[N];
     riempiRandom(a, N);
     print(a, N);
-    bubbleSort(a, N);
+    inserionSort(a, N);
     print(a, N);
 }
