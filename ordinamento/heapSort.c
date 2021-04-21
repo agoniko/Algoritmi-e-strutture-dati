@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
+#include <math.h>
+
 #define N 15
 
 void stampaNodo(int heap[], int i, int size, int spaces);
@@ -10,9 +12,11 @@ void stampaRightSlash(int spaces);
 void scambia(int a[], int i, int j);
 void max_heapify(int a[], int i, int size);
 
-void build_max_heap(int heap[], int size){
-    for(int i = size/2; i > 0; i--){
-        max_heapify(heap,i,size);
+void build_max_heap(int heap[], int size)
+{
+    for (int i = size / 2; i > 0; i--)
+    {
+        max_heapify(heap, i, size);
     }
 }
 
@@ -50,52 +54,43 @@ void riempiInverso(int a[], int size)
         a[i] = size - i;
     }
 }
+void stampaSeparatore()
+{
+    printf("\n");
+    for (int i = 0; i < N * 4; i++)
+    {
+        printf("-");
+    }
+    printf("\n");
+}
 
 void stampaInAmpiezza(int heap[], int size, int i, int spaces)
 {
-    for (int i = 0; i < N * 4; i++)
-    {
-        printf("-");
-    }
-    printf("\n");
+    stampaSeparatore();
     int n = 1;
     int cont = 0;
-    int rightSpaces;
-
     for (int i = 1; i <= size; i++)
     {
+        if (cont == n)
+        {
+            n = n * 2;
+            cont = 0;
+            spaces = spaces / 2;
+            printf("\n\n");
+        }
         if (cont == 0)
         {
-            stampaNodo(heap, i, size, spaces);
-            if (heap[i] < 10)
-            {
-                spaces++;
-                rightSpaces = spaces * 2;
-            }
-            else
-            {
-                rightSpaces = spaces * 2 + 1;
-            }
+            stampaNodo(heap, i, size, spaces+N-log2((double)n));
+            cont++;
         }
         else
         {
-            stampaNodo(heap, i, size, rightSpaces - 1);
-        }
-        cont++;
-        if (cont == n)
-        {
-            n *= 2;
-            cont = 0;
-            printf("\n");
-            spaces = spaces / 2;
-            printf("\n");
+            stampaNodo(heap, i, size, spaces * 2);
+            cont++;
         }
     }
-    for (int i = 0; i < N * 4; i++)
-    {
-        printf("-");
-    }
-    printf("\n");
+    stampaSeparatore();
+    printf("%f",log2(n));
 }
 
 void stampaLeftSlash(int spaces)
@@ -118,6 +113,10 @@ void stampaNodo(int heap[], int i, int size, int spaces)
 {
     if (i <= size)
     {
+        if (heap[i] > 10)
+            spaces++;
+        
+        
         for (int i = 0; i < spaces; i++)
         {
             printf(" ");
@@ -126,9 +125,19 @@ void stampaNodo(int heap[], int i, int size, int spaces)
     }
 }
 
-void riempiRandom(int a[], int size){
-    for(int i = 1; i<=size;i++){
-        a[i] = rand()%N;
+void riempiRandom(int a[], int size)
+{
+    for (int i = 1; i <= size; i++)
+    {
+        a[i] = rand() % N;
+    }
+}
+
+void riempiDritto(int a[], int size)
+{
+    for (int i = 1; i <= size; i++)
+    {
+        a[i] = i;
     }
 }
 
@@ -136,7 +145,7 @@ int main()
 {
     srand(time(0));
     int heap[N + 1];
-    riempiRandom(heap, N);
+    riempiDritto(heap, N);
     stampaInAmpiezza(heap, N, 1, N * 2);
     build_max_heap(heap, N);
     stampaInAmpiezza(heap, N, 1, N * 2);
