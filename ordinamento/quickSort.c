@@ -26,7 +26,6 @@ void scambia(int a[], int i, int j)
     stampaTrattini(a, N);
 }
 
-
 int partition(int a[], int p, int q)
 {
     int i = p;
@@ -47,6 +46,17 @@ int partition(int a[], int p, int q)
     scambia(a, j, p);
     return j;
 }
+
+/*
+Per fare le partizioni si fanno n confronti e quando abbiamo lo stesso numero di
+elementi a sinistra e destra del pivot il numero di scambi sarà circa O(n*log n).
+L'altezza dello stack nel caso sia bilanciato è anch'essa logaritmica.
+Nel caso peggiore (array già ordinato) abbiamo O(n*n) che è raro visto che la
+complessità media è vicina a quella migliore.
+Per garantire che la memoria sia logaritmica si usa un mix di ricorsione e la si
+applica in base alla grandezza della partizione.
+Complessità O(n*log n)
+*/
 
 void quickSort(int a[], int low, int high)
 {
