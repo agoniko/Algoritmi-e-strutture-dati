@@ -97,7 +97,7 @@ int main()
 {
     srand(time(0));
     int a[N];
-    riempiOrdine(a, N);
+    riempiRandom(a, N);
     print(a, N);
     quickSort(a, 0, N - 1);
     print(a, N);
