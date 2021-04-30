@@ -20,6 +20,18 @@ void build_max_heap(int heap[], int size)
     }
 }
 
+//Questa procedura serve per risistemare l'heap.
+//Sostanzialmente prende un padre ed i figli e controlla che essi siano inferiori.
+//Se sono maggiori non vale la proprietà di max heap (si fa al contrario per min_heap)
+//Quindi prende il figlio con chiave più grande e lo scambia con se stesso.
+//Se è avvenuto uno scambio si procede ricorsivamente verso il basso in modo da portare le chiavi minori verso il basso.
+/*
+HeapSort `e un algoritmo di ordinamento in loco che, per ordinare n elementi, effettua Θ(n log n)
+confronti. Pertanto, se ciascun confronto viene effettuato in tempo O(1), il tempo complessivo
+`e Θ(n log n).
+Si pu`o verificare che questo metodo non `e stabile (provate ad esempio a vedere cosa succede
+ordinando un array contenente 3 record, con chiavi 10, 10 e 20).
+*/
 void max_heapify(int a[], int i, int size)
 {
     int left = 2 * i;
@@ -80,7 +92,7 @@ void stampaInAmpiezza(int heap[], int size, int i, int spaces)
         }
         if (cont == 0)
         {
-            stampaNodo(heap, i, size, spaces+N-log2((double)n));
+            stampaNodo(heap, i, size, spaces + N - log2((double)n));
             cont++;
         }
         else
@@ -90,7 +102,7 @@ void stampaInAmpiezza(int heap[], int size, int i, int spaces)
         }
     }
     stampaSeparatore();
-    printf("%f",log2(n));
+    printf("%f", log2(n));
 }
 
 void stampaLeftSlash(int spaces)
@@ -115,8 +127,7 @@ void stampaNodo(int heap[], int i, int size, int spaces)
     {
         if (heap[i] > 10)
             spaces++;
-        
-        
+
         for (int i = 0; i < spaces; i++)
         {
             printf(" ");
