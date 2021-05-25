@@ -95,13 +95,11 @@ void merge(int a[], int sx, int m, int dx)
         if (b[contb] <= c[contc])
         {
             a[conta] = b[contb];
-            stampaTrattini(a,N);
             contb++;
         }
         else
         {
             a[conta] = c[contc];
-            stampaTrattini(a,N);
             contc++;
         }
         conta++;
@@ -109,20 +107,18 @@ void merge(int a[], int sx, int m, int dx)
     while (contb < sizeb)
     {
         a[conta] = b[contb];
-        stampaTrattini(a,N);
         contb++;
         conta++;
     }
     while (contc < sizec)
     {
         a[conta] = c[contc];
-        stampaTrattini(a,N);
         contc++;
         conta++;
     }
 }
 
-int main()
+/*int main()
 {
     srand(time(0));
     int a[N];
@@ -130,4 +126,4 @@ int main()
     print(a, N);
     mergeSort(a, 0, N - 1);
     print(a, N);
-}
+}*/
