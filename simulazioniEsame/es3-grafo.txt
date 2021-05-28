@@ -1,0 +1,23 @@
+1) Nel grafo che descrive il campo di gioco i nodi rappresentano le caselle 
+    mentre gli archi rappresentano l'adiacenza tra una casella e l'altra.
+    Il grafo sarà orientato e presenterà dei sottografi connessi SSE esistono scale o serpenti.
+    Questo grafo non godrà di particolari regolarità.
+    //Per adiacenza si intende la normale vicinanza delle caselle o 
+    la connessione tra due caselle tramite scala o serpente.
+
+2)
+
+camminoMinimo(Grafo G, Nodo start, int passi){
+    for(int i = 1; i< 7; i++){
+        Node maxNode = start->next;
+
+        for(int j = 0; j<start->numeroArchi; j++){
+            Node arco = start->arco;
+            if(arco->next->val > max){
+
+            }
+        }
+        
+        camminoMinimo(G,start)
+    }
+}

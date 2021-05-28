@@ -1,0 +1,6 @@
+1: La sttruttura misteriosa rappresenta una FIFO con riferimento alla coda (all'ultimo elemento inserito)
+2: a rappresenta la testa della FIFO e b rappresenta la coda(primo e ultimo elemento)
+3: 
+    -f1 (Insert) inserisce un elemento in coda ed aggiorna il riferimento della coda
+    -f2 (pop) elimina l'elemento in testa (il più vecchio), se era l'ultimo pone a null il riferimento alla coda.
+    
