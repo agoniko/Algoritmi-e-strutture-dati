@@ -1,0 +1,4 @@
+il grafo, se si tolgono gli interruttori e si tengono semplicemente le luci
+viene rappresentato come un poligono regolare i quali vertici (nodi) rappresentano
+le luci e gli archi rappresentano i collegamenti tra di esse.
+Il grafo sarà non orientato e connesso.
