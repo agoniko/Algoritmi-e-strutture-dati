@@ -67,3 +67,29 @@ bool emptyq(Queue q)
     return q == NULL ? true : false;
 }
 
+void delete (Queue *q, int val)
+{
+    if (emptyq(*q))
+        return;
+    if ((*q)->v == val)
+    {
+        Queue p = *q;
+        *q = (*q)->next;
+        free(p);
+        return;
+    }
+    else
+    {
+        Queue p = *q;
+        while (p->next->v != val && p->next != NULL)
+        {
+            p = p->next;
+        }
+        if (p->next == NULL)
+            return;
+        Queue ap = p->next;
+        p->next = ap->next;
+        free(ap);
+        return;
+    }
+}
