@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include "queue.c"
 #include <math.h>
+#include <time.h>
 
 struct graph
 {
@@ -19,7 +20,7 @@ Graph graph_new(int n);
 void graph_destroy(Graph g);
 
 /* inserisce l’arco (v,w) nel grafo g */
-void graph_edgeinsert(Graph g, int v, int w);
+void graph_edgeinsert(Graph g, int v, int w, int peso);
 
 /* legge da standard input un grafo (specificare il formato!!) */
 Graph graph_read(void);
@@ -45,7 +46,7 @@ void dfs1(Graph g, int curr, bool *visti)
     visti[curr] = true;
     for (int i = 0; i < g->n; i++)
     {
-        if (!visti[i] && g->A[curr][i] == 1)
+        if (!visti[i] && g->A[curr][i] > 0)
         {
             printf("%d, ", i);
             dfs1(g, i, visti);
@@ -69,11 +70,11 @@ void dfs(Graph g)
     printf("\n");
 }
 
-void graph_edgeinsert(Graph g, int v, int w)
+void graph_edgeinsert(Graph g, int v, int w, int peso)
 {
     if (v >= g->n || w >= g->n)
         return;
-    g->A[v][w] = 1;
+    g->A[v][w] = peso;
 }
 
 Graph graph_read()
@@ -85,9 +86,9 @@ Graph graph_read()
     int cont = 0;
     while (!feof(file))
     {
-        int v1, v2;
-        fscanf(file, "%d %d", &v1, &v2);
-        graph_edgeinsert(g, v1, v2);
+        int v1, v2, w;
+        fscanf(file, "%d %d %d", &v1, &v2, &w);
+        graph_edgeinsert(g, v1, v2, w);
         cont++;
     }
     fclose(file);
@@ -106,7 +107,7 @@ void bfs1(Graph g, int k, bool *visti)
         visti[curr] = true;
         for (int i = 0; i < g->n; i++)
         {
-            if (!visti[i] && g->A[curr][i] == 1)
+            if (!visti[i] && g->A[curr][i] > 0)
             {
                 enqueue(&q, i);
                 visti[i] = true;
@@ -192,7 +193,7 @@ void cc(Graph g, int v)
 
     for (int i = 0; i < g->n; i++)
     {
-        if (!visti[i] && g->A[v][i] == 1)
+        if (!visti[i] && g->A[v][i] > 0)
         {
             dfsPath(g, prec, visti, i, v);
             if (prec[v] != -1)
@@ -272,17 +273,128 @@ int *prim(Graph g, int v)
     return prec;
 }
 
+void relax(int *dist, int *prec, int start, int target, int peso)
+{
+    if (dist[target] > dist[start] + peso)
+    {
+        dist[target] = dist[start] + peso;
+        prec[target] = start;
+    }
+}
+
+Queue creaCoda(Graph g)
+{
+    Queue q = NULL;
+    for (int i = g->n - 1; i >= 0; i--)
+    {
+        enqueue(&q, i);
+    }
+    return q;
+}
+
+int extractMin(int *dist, bool *visti, int n)
+{
+    int min = (int)INFINITY;
+    int indexMin = -1;
+    for (int i = 0; i < n; i++)
+    {
+        if (min > dist[i] && !visti[i])
+        {
+            min = dist[i];
+            indexMin = i;
+        }
+    }
+    return indexMin;
+}
+
+void shortestPath(Graph g, int start, int target)
+{
+    bool *visti = calloc(g->n, sizeof(bool));
+    int *dist = calloc(g->n, sizeof(int));
+    int *prec = calloc(g->n, sizeof(int));
+    initializeDist(g, dist, start);
+    initialize(prec, g->n);
+    Queue q = creaCoda(g);
+
+    while (!emptyq(q))
+    {
+        int curr = extractMin(dist, visti, g->n);
+        delete (&q, curr);
+        visti[curr] = true;
+        for (int i = 0; i < g->n; i++)
+        {
+            if (g->A[curr][i] > 0)
+            {
+                relax(dist, prec, curr, i, g->A[curr][i]);
+            }
+        }
+    }
+    int pesoTot = 0;
+    int v = target;
+    while (prec[v] != -1)
+    {
+        pesoTot += g->A[prec[v]][v];
+        v = prec[v];
+    }
+    stampaPrec(prec, target);
+    printf("Peso: %d\n", pesoTot);
+}
+
+bool isBipartito1(Graph g, bool *visti, bool *color, int curr, bool colore)
+{
+    visti[curr] = true;
+    color[curr] = colore;
+    for (int i = 0; i < g->n; i++)
+    {
+        if (visti[i] && color[i] == colore && g->A[curr][i] > 0)
+            return false;
+        if (!visti[i] && g->A[curr][i] > 0)
+        {
+            if (!isBipartito1(g, visti, color, i, !colore))
+                return false;
+        }
+    }
+    return true;
+}
+
+bool isBipartito(Graph g)
+{
+    bool *visti = calloc(g->n, sizeof(bool));
+    bool *color = calloc(g->n, sizeof(bool));
+    for (int i = 0; i < g->n; i++)
+    {
+        if (!visti[i])
+        {
+            if (!isBipartito1(g, visti, color, i, true))
+                return false;
+        }
+    }
+    return true;
+}
+
+bool oddCycles(Graph g){
+    if(isBipartito(g)){
+        return false;
+    }else{
+        return true;
+    }
+}
+
 int main(void)
 {
     Graph g = graph_read();
-    dfs(g);
-    bfs(g);
-    int v = 0, w = 0;
-    int *prec = prim(g, 0);
-    for (int i = 0; i < g->n; i++)
+
+    int somma = 0;
+    for (int i = 0; i < 100; i++)
     {
-        printf("%d ", prec[i]);
+        clock_t s = clock(), e;
+        isBipartito(g);
+        e = clock();
+        somma += (e - s);
     }
-    printf("\n");
+
+    printf("%f\n", (float)somma / 100);
+
+    printf("%d\n",oddCycles(g));
     return (0);
 }
