@@ -208,7 +208,7 @@ int main(void)
     Queue q = NULL;
     for (int i = 0; i < rows; i++)
     {
-        q = enqueue(q, i);
+        enqueue(&q, i);
     }
 
     int *dist = calloc(rows, sizeof(int));

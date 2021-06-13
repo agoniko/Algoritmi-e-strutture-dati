@@ -3,7 +3,6 @@
 #include <math.h>
 #include <stdbool.h>
 
-
 typedef struct queue
 {
     int v;
@@ -12,34 +11,54 @@ typedef struct queue
 
 typedef struct queue *Queue;
 
-Queue createqueue()
+void enqueue(Queue *q, int val)
 {
-    Queue q = malloc(sizeof(Queue));
-    q->v = (int)-INFINITY;
-    q->next = NULL;
-    return q;
-}
-
-
-Queue enqueue(Queue q, int v)
-{
-    if(q == NULL){
-        q = malloc(sizeof(Queue));
-        q->v = v;
-        q->next = NULL;
-        return q;
+    struct queue *ap = malloc(sizeof(struct queue));
+    ap->v = val;
+    ap->next = NULL;
+    if (*q == NULL)
+    {
+        *q = ap;
     }
     else
     {
-        Queue p = q;
-        while (p->next != NULL)
+        ap->next = *q;
+        *q = ap;
+    }
+}
+
+void printq(Queue q)
+{
+    while (q != NULL)
+    {
+        printf("%d -> ", q->v);
+        q = q->next;
+    }
+    printf("\n");
+}
+
+int dequeue(Queue *q)
+{
+    if (*q == NULL)
+        return -1;
+    if ((*q)->next == NULL)
+    {
+        int v = (*q)->v;
+        free(*q);
+        *q = NULL;
+        return v;
+    }
+    else
+    {
+        Queue p = *q;
+        while (p->next->next != NULL)
         {
             p = p->next;
         }
-        p->next = malloc(sizeof(Queue));
-        p->next->v = v;
-        p->next->next = NULL;
-        return q;
+        int v = p->next->v;
+        free(p->next);
+        p->next = NULL;
+        return v;
     }
 }
 
@@ -48,28 +67,3 @@ bool emptyq(Queue q)
     return q == NULL ? true : false;
 }
 
-int dequeue(Queue *q)
-{
-   if(!emptyq(*q)){
-       Queue p = *q;
-       *q = (*q)->next;
-       int v = p->v;
-       free(p);
-       return v;
-   }
-   *q = NULL;
-   printf("vuota\n");
-   return -1;
-}
-
-
-void printQueue(Queue q)
-{
-    Queue p = q;
-    while (p != NULL)
-    {
-        printf("%d -> ", p->v);
-        p = p->next;
-    }
-    printf("\n");
-}

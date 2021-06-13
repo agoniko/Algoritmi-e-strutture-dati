@@ -1,0 +1,5 @@
+1) La struttura dati è una lista 
+    concatenata con riferimento in testa e in coda.
+2) a rappresenta la testa e b la coda.
+
+4) f1 rappresenta una push e f2 una pop;

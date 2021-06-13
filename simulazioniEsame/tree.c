@@ -43,7 +43,7 @@ void printInorder(Node root)
     }
 }
 
-//non funziona perchè salta alcuni 
+//non funziona perchè salta alcuni
 //rami dato che chiama direttamente il ramo root->left->left
 // ma non root->left->right
 void incrementa(Node root)
@@ -64,26 +64,37 @@ void incrementa(Node root)
     }
 }
 
-void incrementaFunzionante(Node root){
-    if(root != NULL){
+void incrementaFunzionante(Node root)
+{
+    if (root != NULL)
+    {
         root->val++;
         incrementaFunzionante(root->left);
         incrementaFunzionante(root->right);
     }
 }
 
+void print(int *a, int size)
+{
+    for (int i = 0; i < size; i++)
+    {
+        printf("%d ", a[i]);
+    }
+    printf("\n");
+}
+
+Node creaAlberoDaPreOrderVector(int *a, int size)
+{
+    Node root = NULL;
+    root = addNode(root, a[0]);
+    
+}
+
 int main(void)
 {
     srand(time(0));
     Node root = NULL;
-    for (int i = 0; i < 30; i += 2)
-    {
-        root = addNode(root, rand() % 15);
-    }
-    printInorder(root);
-    printf("\n");
-    incrementaFunzionante(root);
-    printInorder(root);
+    int a[9] = {28, 17, 10, 15, 25, 23, 36, 34, 44};
 
     return (0);
 }

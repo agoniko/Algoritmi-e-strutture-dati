@@ -1,0 +1,36 @@
+(a) Il grafo può essere modellato in modo da rappresentare 
+gli incroci come nodi del grafo e gli archi come i tratti di strada
+che vanno da un incrocio all'altro.
+Il peso degli archi è determinato dalla lunghezza del tratto di strada.
+
+L'algoritmo che si vuole utilizzare per determinare quali saranno le 
+strade attraversate dalle tubazioni primarie e secondarie prende come
+riferimento un algoritmo che calcola l'albero ricoprente minimo
+sul nostro grafo (per trovare dove posizionare le tubazioni primarie)
+e una volta trovato questo insieme le tubazioni secondarie saranno
+posizionate nei restanti archi.
+
+L'algoritmo scelto per trovare l'albero ricoprente minimo è Kruskal.
+
+algoritmo tubazioniPrimarie(Grafo g)
+    A <- insieme vuoto
+    for (ogni V appartenente a G->V) do
+        makeset(V)
+    
+    E <- insieme degli archi ordinato in ordine crescente
+
+    for( ogni (uv) appartenente ad E) do
+        if(findset(u) != findset(v)) do
+            union(u,v)
+            A<-A U {u,v}
+    
+    return A
+
+algoritmo tubazioniSecondarie(Grafo g)
+    P <- tubazioniPrimarie(g)
+    S = S - P
+
+    return S
+
+dati m archi del grafo e n nodi l'algoritmo di Kruskal
+impiega nel caso peggiore O(m log n) operazioni.

@@ -112,7 +112,7 @@ void initializeToNegativeOne(int *arr, int size)
 int bfs(int *jump, int size, int start)
 {
 	Queue q = NULL;
-	q = enqueue(q, start);
+	enqueue(&q, start);
 
 	int *dist = malloc(sizeof(int) * (size + 1));
 	initializeToNegativeOne(dist, size + 1);
@@ -135,7 +135,7 @@ int bfs(int *jump, int size, int start)
 			if(casellaArrivo == size){
 				return dist[casellaArrivo];
 			}else{
-				q = enqueue(q,casellaArrivo);
+				enqueue(&q,casellaArrivo);
 			}
 
 		}

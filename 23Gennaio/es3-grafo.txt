@@ -1,0 +1,40 @@
+Il gioco può essere formalizzato con un grafo i quali nodi 
+rappresentano la posizione del giocatore sulla scacchiera, ogni nodo è
+collegato ai nodi che rappresentano una possibile futura posizione
+del giocatore partendo da quello stato (mediamente un nodo ha 5 archi
+uscenti tranne i nodi che rappresentano le n-4 posizioni).
+Il grafo è orientato e ciclico (grazie a scale e serpenti).
+
+il punto a ed il punto b vengono svolti all'interno dello stesso algoritmo.
+Possiamo infatti utilizzare l'algoritmo di dijkstra ed oltre ad
+aggiornare le informazioni relative ai pesi teniamo anche conto 
+del predecessore di ogni nodo.
+Ogni arco ha peso 1.
+
+void relax(d[], u,v,precedenti []){
+    if(d[v] > d[u] + 1){
+        d[v] = d[u] + 1;
+        precedenti[v] = u;
+    }
+}
+
+initializeSingleSource(Grafo G, Source s, d[], precedenti[]){
+    Per ogni v appartenente a G->V do  
+        precedenti[v] = -1
+        d[v] = INFINITY
+    
+    d[s] = 0
+}
+
+algoritmo dijkstraSerpentiScale(Grafo G){
+    initializeSingleSource(G,1,d[n],precedenti[n])
+    Q = {G->V}
+    while Q is not vuoto do{
+        u = extractMin(Q)
+        Per ogni vertice v adiacente a u do{
+            relax(d,u,v,precedenti)
+        }
+    }
+   }
+
+   
