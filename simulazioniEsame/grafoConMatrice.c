@@ -242,46 +242,28 @@ void printSpaces(int n)
     }
 }
 
-//da finire
-void printAsSummary(Graph g, int *dist, int *prec, int node, int spaces)
+int **initializeSon(int size)
 {
-    if (node >= g->n)
-        return;
+    int **son = calloc(size, sizeof(int *));
+    for (int i = 0; i < size; i++)
+    {
+        son[i] = calloc(size, sizeof(int));
+        initialize(son[i], size);
+    }
+    return son;
 }
 
-int *prim(Graph g, int v)
+void insertSon(int **son, int father, int s, int size)
 {
-    bool *visti = calloc(g->n, sizeof(bool));
-    int *prec = calloc(g->n, sizeof(int));
-    int *dist = calloc(g->n, sizeof(int));
-    initialize(prec, g->n);
-    initializeDist(g, dist, v);
-
-    for (int i = 0; i < g->n - 1; i++)
+    for (int i = 0; i < size; i++)
     {
-        int u = minKey(g, dist, visti);
-        visti[u] = true;
-        for (int j = 0; j < g->n; j++)
+        if (son[i][father] == -1)
         {
-            if (g->A[u][j] == 1 && !visti[j] && dist[u] + 1 < dist[j])
-            {
-                prec[j] = u;
-                dist[j] = dist[u] + 1;
-            }
+            son[i][father] = s;
+            break;
         }
     }
-    return prec;
 }
-
-void relax(int *dist, int *prec, int start, int target, int peso)
-{
-    if (dist[target] > dist[start] + peso)
-    {
-        dist[target] = dist[start] + peso;
-        prec[target] = start;
-    }
-}
-
 Queue creaCoda(Graph g)
 {
     Queue q = NULL;
@@ -305,6 +287,57 @@ int extractMin(int *dist, bool *visti, int n)
         }
     }
     return indexMin;
+}
+
+bool isSon(int **son, int s, int size)
+{
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
+        }
+    }
+}
+
+int **prim(Graph g, int v)
+{
+    bool *visti = calloc(g->n, sizeof(bool));
+    bool *isSon = calloc(g->n, sizeof(bool));
+    int **son = initializeSon(g->n);
+    int *dist = calloc(g->n, sizeof(int));
+    initializeDist(g, dist, v);
+    Queue q = creaCoda(g);
+
+    while (!emptyq(q))
+    {
+        int u = extractMin(dist, visti, g->n);
+        delete (&q, u);
+        visti[u] = true;
+        for (int j = 0; j < g->n; j++)
+        {
+            if (g->A[u][j] > 0 && !isSon[j] && dist[u] + g->A[u][j] < dist[j])
+            {
+                insertSon(son, u, j, g->n);
+                isSon[j] = true;
+                dist[j] = dist[u] + g->A[u][j];
+            }
+        }
+    }
+    for (int i = 0; i < g->n; i++)
+    {
+        printf("%d ", dist[i]);
+    }
+    printf("\n");
+    return son;
+}
+
+void relax(int *dist, int *prec, int start, int target, int peso)
+{
+    if (dist[target] > dist[start] + peso)
+    {
+        dist[target] = dist[start] + peso;
+        prec[target] = start;
+    }
 }
 
 void shortestPath(Graph g, int start, int target)
@@ -372,11 +405,32 @@ bool isBipartito(Graph g)
     return true;
 }
 
-bool oddCycles(Graph g){
-    if(isBipartito(g)){
+bool oddCycles(Graph g)
+{
+    if (isBipartito(g))
+    {
         return false;
-    }else{
+    }
+    else
+    {
         return true;
+    }
+}
+
+void printAsSummary(int **son, int size, int spaces, int curr)
+{
+    if (curr == -1)
+        return;
+    printSpaces(spaces);
+    printf("*%d\n", curr);
+    for (int i = 0; i < size; i++)
+    {
+        if (son[i][curr] == -1)
+            break;
+        else
+        {
+            printAsSummary(son, size, spaces + 2, son[i][curr]);
+        }
     }
 }
 
@@ -384,17 +438,17 @@ int main(void)
 {
     Graph g = graph_read();
 
-    int somma = 0;
-    for (int i = 0; i < 100; i++)
+    int **son = prim(g, 0);
+    for (int i = 0; i < g->n; i++)
     {
-        clock_t s = clock(), e;
-        isBipartito(g);
-        e = clock();
-        somma += (e - s);
+        for (int j = 0; j < g->n; j++)
+        {
+            printf("%d ", son[i][j]);
+        }
+        printf("\n");
     }
+    printf("\n");
 
-    printf("%f\n", (float)somma / 100);
-
-    printf("%d\n",oddCycles(g));
+    printAsSummary(son, g->n, 0, 0);
     return (0);
 }
